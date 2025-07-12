@@ -1,0 +1,58 @@
+<?php
+session_start(); // Inicia la sesión PHP para mantener al usuario autenticado
+
+//  autenticado en la sesión.
+// Verifica si hay un usuario. Si no lo hay, redirige al login.
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.php");
+    exit();
+}
+
+include 'db.php';
+// Obtiene el ID del usuario actual
+$usuario_id = $_SESSION['usuario']['id'];
+$estado = 'abandonado';//buscar solo los libros que estén marcados como "abandonado"
+// Prepara la consulta SQL para obtener los libros abandonados por el usuario actual
+$sql = "SELECT id, titulo, portada FROM libros WHERE usuario_id = ? AND estado = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $usuario_id, $estado);
+$stmt->execute();
+$resultado = $stmt->get_result();
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Libros Abandonados</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="libros">
+<div class="titulo">
+   <h1> Libros Abandonados</h1>
+</div>
+    <div class="contenedor-libros">
+    <!-- Bucle que recorre cada libro obtenido de la base de datos -->
+    <?php while ($libro = $resultado->fetch_assoc()): ?> 
+        <!-- Cada libro se presenta como un enlace que lleva a su página de detalles -->
+        <div class="libro">
+            <a href="detalles.php?id=<?= $libro['id'] ?>">
+                <?php if (!empty($libro['portada'])): ?>
+                    <img src="<?= htmlspecialchars($libro['portada']) ?>" alt="Portada de <?= htmlspecialchars($libro['titulo']) ?>">
+                <?php endif; ?>
+                <h3><?= htmlspecialchars($libro['titulo']) ?></h3>
+            </a>
+            <!-- Botón dentro de la tarjeta -->
+            <a href="detalles.php?id=<?= $libro['id'] ?>" class="boton-footer">Ver detalles</a>
+        </div>
+    <?php endwhile; ?>
+</div>
+
+  
+  <footer class="footer-sesion">
+   
+    <a href="biblioteca.php" class="boton-footer">Volver al inicio</a>
+  </footer>
+    
+</body>
+</html>
