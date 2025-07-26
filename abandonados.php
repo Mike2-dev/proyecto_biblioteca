@@ -1,14 +1,12 @@
 <?php
 session_start(); // Inicia la sesión PHP para mantener al usuario autenticado
-
+include 'db.php';
 //  autenticado en la sesión.
 // Verifica si hay un usuario. Si no lo hay, redirige al login.
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
 }
-
-include 'db.php';
 // Obtiene el ID del usuario actual
 $usuario_id = $_SESSION['usuario']['id'];
 $estado = 'abandonado';//buscar solo los libros que estén marcados como "abandonado"
@@ -35,24 +33,16 @@ $resultado = $stmt->get_result();
     <!-- Bucle que recorre cada libro obtenido de la base de datos -->
     <?php while ($libro = $resultado->fetch_assoc()): ?> 
         <!-- Cada libro se presenta como un enlace que lleva a su página de detalles -->
-        <div class="libro">
             <a href="detalles.php?id=<?= $libro['id'] ?>">
                 <?php if (!empty($libro['portada'])): ?>
                     <img src="<?= htmlspecialchars($libro['portada']) ?>" alt="Portada de <?= htmlspecialchars($libro['titulo']) ?>">
                 <?php endif; ?>
                 <h3><?= htmlspecialchars($libro['titulo']) ?></h3>
             </a>
-            <!-- Botón dentro de la tarjeta -->
-            <a href="detalles.php?id=<?= $libro['id'] ?>" class="boton-footer">Ver detalles</a>
-        </div>
     <?php endwhile; ?>
 </div>
-
-  
   <footer class="footer-sesion">
-   
     <a href="biblioteca.php" class="boton-footer">Volver al inicio</a>
   </footer>
-    
 </body>
 </html>
