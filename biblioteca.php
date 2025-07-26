@@ -1,13 +1,11 @@
 <?php
 session_start(); // Inicia la sesión para mantener al usuario autenticado
-
+include 'db.php'; 
 // Verifica si el usuario ha iniciado sesión; si no, lo redirige al login
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
 }
-
-include 'db.php'; 
 
 $id = $_SESSION['usuario']['id']; // Obtiene el ID del usuario desde la sesión
 
@@ -31,8 +29,6 @@ $user = $resultado->fetch_assoc();
 <body class="pagina-inicio">
 
   <header class="encabezado">
-    <h1 class="titulo-principal">Biblioteca</h1>
-
     <div class="perfil">
       <a href="perfil.php" class="btn-perfil" title="Ver perfil">
         <?php if (!empty($user['foto_perfil'])): ?>
@@ -44,10 +40,13 @@ $user = $resultado->fetch_assoc();
         <?php endif; ?>
       </a>
     </div>
-
+<div class="titulo-contenedor"> 
+    <h1 class="titulo-principal">BIBLIOTECAA</h1>
+</div>
     <!-- Barra de búsqueda   -->
-    <form class="barra-busqueda">
-      <input type="text" placeholder="Buscar categoría o libro...">
+    <form action="busqueda.php" method="GET" class="barra-busqueda">
+      <input type="text" name="busqueda" placeholder="Buscar autor o titulo del libro...">
+        <button type="submit">Buscar</button>
     </form>
   </header>
 
