@@ -1,13 +1,15 @@
 <?php
 session_start(); 
+$mensaje = '';
+if (isset($_GET['actualizado']) && $_GET['actualizado'] == '1') {
+    $mensaje = 'Libro actualizado correctamente.';
+}
+include 'db.php';
 // Verifica si el usuario ha iniciado sesión
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php"); 
     exit();
 }
-
-include 'db.php'; 
-
 $id = $_GET['id'] ?? null; // Obtiene el ID del libro desde la 
 $usuario = $_SESSION['usuario']; // Guarda los datos del usuario actual
 
@@ -27,7 +29,6 @@ if ($result->num_rows !== 1) {
     echo "Libro no encontrado o acceso no permitido.";
     exit();
 }
-
 $libro = $result->fetch_assoc();
 ?>
 
@@ -52,6 +53,9 @@ $libro = $result->fetch_assoc();
 
     <!-- Detalles del libro -->
     <div class="info-libro">
+        <?php if (!empty($mensaje)): ?>
+            <div class="mensaje-exito"><?= $mensaje ?></div>
+        <?php endif; ?>
         <h2><?= htmlspecialchars($libro['titulo']) ?></h2>
         <p><strong>Autor:</strong> <?= htmlspecialchars($libro['autor']) ?></p>
 
