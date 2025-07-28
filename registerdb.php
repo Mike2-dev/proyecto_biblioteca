@@ -6,6 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = trim($_POST['correo']);
     $usuario = trim($_POST['usuario']);
     $clave = $_POST['clave'];
+         // Validación de contraseña en el servidor
+    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/', $clave)) {
+    header("Location: formregister.php?error=clave_invalida");
+    exit();
+}
     //Se consulta si el correo ya está registrado para evitar duplicados
     $consulta = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
     $consulta->bind_param("s", $correo);
@@ -32,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $_SESSION['foto_perfil'] = $foto_perfil;
     
-    header("Location: biblioteca.php");
+    header("Location: login.php?registro=exitoso");
     exit();
 }
     $consulta->close();
