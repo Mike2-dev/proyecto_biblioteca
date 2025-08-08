@@ -9,7 +9,7 @@ if (!isset($_SESSION['usuario'])) {
 
 include 'db.php'; 
 
-$usuario_id = $_SESSION['usuario']['id']; // ID del usuario actual
+$usuario_id = $_SESSION['usuario']['usuario_id'] ?? 1; // id de usuario
 
 // Verifica si el formulario fue enviado por método POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
