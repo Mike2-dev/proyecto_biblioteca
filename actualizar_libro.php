@@ -19,6 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     $nota = trim($_POST['nota']);
     $tipo = $_POST['tipo'];
     $estado = $_POST['estado'];
+    
+    if (empty($titulo) || empty($autor) || empty($tipo) || empty($estado)) {
+        die("Faltan datos obligatorios como el título, autor, tipo o estado.");
+    }
     $tipo_estanteria = $_POST['tipo_estanteria'];
     $estante_existente = $_POST['estante_existente'] ?? null;
     $nuevo_estante = trim($_POST['nuevo_estante']);
